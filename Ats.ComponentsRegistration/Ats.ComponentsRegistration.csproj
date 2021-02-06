@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Castle.Windsor" Version="5.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ats.Application\Ats.Application.csproj" />
+    <ProjectReference Include="..\Ats.Core\Ats.Core.csproj" />
+    <ProjectReference Include="..\Ats.Domain\Ats.Domain.csproj" />
+    <ProjectReference Include="..\Ats.Infrastructure\Ats.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
