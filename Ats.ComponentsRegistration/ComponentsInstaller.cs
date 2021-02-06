@@ -1,11 +1,11 @@
-﻿using Ats.Application;
+﻿using Ats.Application.Booking;
+using Ats.Core.Commands;
 using Ats.Core.Domain;
+using Ats.Domain.Booking;
+using Castle.Facilities.TypedFactory;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
-using Castle.Facilities.TypedFactory;
-using Ats.Core.Commands;
-using Ats.Domain;
 
 namespace Ats.ComponentsRegistration
 {

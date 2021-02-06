@@ -1,11 +1,11 @@
 ﻿using Ats.Core.Domain;
 using System;
 
-namespace Ats.Domain
+namespace Ats.Domain.FlightInstance
 {
-    public class BookingAddedEvent : IEvent
+    public class FlightInstanceBookingAddedEvent : IEvent
     {
-        public BookingAddedEvent(Guid flightInstanceId, Guid bookingId)
+        public FlightInstanceBookingAddedEvent(Guid flightInstanceId, Guid bookingId)
         {
             FlightInstanceId = flightInstanceId;
             BookingId = bookingId;

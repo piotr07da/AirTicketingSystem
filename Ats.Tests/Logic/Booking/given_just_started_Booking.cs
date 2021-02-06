@@ -1,5 +1,6 @@
-﻿using Ats.Application;
+﻿using Ats.Application.Booking;
 using Ats.Domain;
+using Ats.Domain.Booking;
 using Ats.Tests.TestTools;
 using NUnit.Framework;
 using System;

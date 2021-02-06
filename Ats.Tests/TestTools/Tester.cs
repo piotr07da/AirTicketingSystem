@@ -113,7 +113,7 @@ namespace Ats.Tests.TestTools
         private void AssertEventsAreEqual(IEvent[] expectedEvents, IEvent[] publishedEvents)
         {
             if (expectedEvents.Length != publishedEvents.Length)
-                Assert.Fail($"Unexpected events published.{Environment.NewLine}Expected: {string.Join(",", expectedEvents.Select(ee => ee.GetType().Name))}{Environment.NewLine}But was: {string.Join(",", publishedEvents.Select(ee => ee.GetType().Name))}");
+                Assert.Fail($"Expected and published events are not the same.{Environment.NewLine}Expected: [{string.Join(",", expectedEvents.Select(ee => ee.GetType().Name))}]{Environment.NewLine}But was: [{string.Join(",", publishedEvents.Select(ee => ee.GetType().Name))}]");
 
             for (var i = 0; i < expectedEvents.Length; ++i)
             {

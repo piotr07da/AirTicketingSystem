@@ -1,7 +1,7 @@
 ﻿using Ats.Core.Domain;
 using System;
 
-namespace Ats.Domain
+namespace Ats.Domain.Booking
 {
     public class BookingCanceledEvent : IEvent
     {

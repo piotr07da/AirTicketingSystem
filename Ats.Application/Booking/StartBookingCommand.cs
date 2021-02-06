@@ -1,7 +1,7 @@
 ﻿using Ats.Core.Commands;
 using System;
 
-namespace Ats.Application
+namespace Ats.Application.Booking
 {
     public class StartBookingCommand : ICommand
     {

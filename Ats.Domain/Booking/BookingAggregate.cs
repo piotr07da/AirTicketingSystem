@@ -1,17 +1,18 @@
 ﻿using Ats.Core.Domain;
+using Ats.Domain.FlightInstance;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace Ats.Domain
+namespace Ats.Domain.Booking
 {
     public class BookingAggregate : IChangable
     {
         private readonly IAggregateEventApplier _aggregateEventApplier;
 
-        private Guid _id;
-        private Guid _flightInstanceId;
-        private Guid _customerId;
+        private BookingId _id;
+        private FlightInstanceId _flightInstanceId;
+        private CustomerId _customerId;
+        private IDictionary<string, DiscountOffer> _discountOffers = new Dictionary<string, DiscountOffer>();
         private bool _isCanceled;
 
         public BookingAggregate(IAggregateEventApplier aggregateEventApplier)
@@ -21,13 +22,25 @@ namespace Ats.Domain
 
         public Changes Changes { get; } = new Changes();
 
-        public Guid Id => _id;
+        public BookingId Id => _id;
+        public FlightInstanceId FlightInstanceId => _flightInstanceId;
+        public CustomerId CustomerId => _customerId;
 
         public void Start(Guid bookingId, Guid flightInstanceId)
         {
-            if (_id != Guid.Empty) throw new DomainLogicException($"This booking is already started and has id {_id}.");
+            if (_id.IsDefined) throw new DomainLogicException($"This booking is already started and has id {_id}.");
 
             _aggregateEventApplier.ApplyNewEvent(new BookingStartedEvent(bookingId, flightInstanceId));
+        }
+
+        public void AddDiscountOffer(DiscountOffer discountOffer)
+        {
+            if (_discountOffers.ContainsKey(discountOffer.Name))
+            {
+                throw new DomainLogicException($"{discountOffer.Name} discount offer already exists.");
+            }
+
+            _aggregateEventApplier.ApplyNewEvent(new BookingDiscountOfferAddedEvent(_id, discountOffer.Name, discountOffer.Value));
         }
 
         public void Cancel()
@@ -41,7 +54,7 @@ namespace Ats.Domain
         {
             EnsureIsCreated();
 
-            if (_customerId.IsUndefined())
+            if (_customerId.IsUndefined)
             {
                 throw new DomainLogicException($"Cannot confirm incomplete booking. Customer is undefined.");
             }
@@ -49,7 +62,7 @@ namespace Ats.Domain
 
         private void EnsureIsCreated()
         {
-            if (_id.IsUndefined())
+            if (_id.IsUndefined)
             {
                 throw new DomainLogicException($"This booking is not created yet.");
             }
@@ -59,6 +72,16 @@ namespace Ats.Domain
         {
             _id = e.BookingId;
             _flightInstanceId = e.FlightInstanceId;
+        }
+
+        private void Apply(BookingCustomerAssignedEvent e)
+        {
+            _customerId = e.CustomerId;
+        }
+
+        private void Apply(BookingDiscountOfferAddedEvent e)
+        {
+            _discountOffers.Add(e.OfferName, new DiscountOffer(e.OfferName, e.OfferValue));
         }
 
         private void Apply(BookingCanceledEvent e)

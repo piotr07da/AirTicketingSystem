@@ -1,5 +1,6 @@
-﻿using Ats.Application;
+﻿using Ats.Application.Booking;
 using Ats.Domain;
+using Ats.Domain.FlightInstance;
 using Ats.Tests.TestTools;
 using NUnit.Framework;
 using System;
@@ -23,7 +24,7 @@ namespace Ats.Tests.Logic.Booking
             var bookingId = Guid.NewGuid();
 
             await Tester.TestAsync(gwt => gwt
-                .Given(_flightInstanceId, new FlightInstanceCreatedEvent(_flightInstanceId), new BookingAddedEvent(_flightInstanceId, bookingId))
+                .Given(_flightInstanceId, new FlightInstanceCreatedEvent(_flightInstanceId, Guid.NewGuid(), DateTime.Now), new FlightInstanceBookingAddedEvent(_flightInstanceId, bookingId))
                 .When(new StartBookingCommand(bookingId, _flightInstanceId, 2))
                 .Throws<DomainLogicException>("already")
                 );

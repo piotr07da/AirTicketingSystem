@@ -1,14 +1,16 @@
 ﻿using Ats.Core.Domain;
+using Ats.Domain.Booking;
 using System;
 using System.Collections.Generic;
 
-namespace Ats.Domain
+namespace Ats.Domain.FlightInstance
 {
     public class FlightInstanceAggregate : IChangable
     {
         private readonly IAggregateEventApplier _aggregateEventApplier;
 
-        private Guid _id;
+        private FlightInstanceId _id;
+        private DateTime _departureDate;
         private HashSet<Guid> _bookings = new HashSet<Guid>();
 
         public FlightInstanceAggregate(IAggregateEventApplier aggregateEventApplier)
@@ -18,9 +20,10 @@ namespace Ats.Domain
 
         public Changes Changes { get; } = new Changes();
 
-        public Guid Id => _id;
+        public FlightInstanceId Id => _id;
+        public DateTime DepartureDate => _departureDate;
 
-        public void AddBooking(Guid bookingId)
+        public void AddBooking(BookingId bookingId)
         {
             EnsureIsCreated();
 
@@ -29,12 +32,12 @@ namespace Ats.Domain
                 throw new DomainLogicException($"This flight instance {_id} already has this booking {bookingId}.");
             }
 
-            _aggregateEventApplier.ApplyNewEvent(new BookingAddedEvent(_id, bookingId));
+            _aggregateEventApplier.ApplyNewEvent(new FlightInstanceBookingAddedEvent(_id, bookingId));
         }
 
         private void EnsureIsCreated()
         {
-            if (_id.IsUndefined())
+            if (_id.IsUndefined)
             {
                 throw new DomainLogicException($"This flight isntance is not created yet.");
             }
@@ -43,9 +46,10 @@ namespace Ats.Domain
         private void Apply(FlightInstanceCreatedEvent e)
         {
             _id = e.FlightInstanceId;
+            _departureDate = e.DepartureDate;
         }
 
-        private void Apply(BookingAddedEvent e)
+        private void Apply(FlightInstanceBookingAddedEvent e)
         {
             _bookings.Add(e.BookingId);
         }
