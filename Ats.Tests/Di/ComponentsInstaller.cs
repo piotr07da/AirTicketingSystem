@@ -1,4 +1,5 @@
 ﻿using Ats.Core.Domain;
+using Ats.Domain;
 using Ats.Tests.TestTools;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
@@ -10,9 +11,8 @@ namespace Ats.Tests.Di
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            // Core
-
             container.Register(Component.For<IRepositoryEventStore>().ImplementedBy<FakeRepositoryEventStore>().IsDefault().LifestyleTransient());
+            container.Register(Component.For<IDateTimeProvider>().ImplementedBy<FakeDateTimeProvider>().IsDefault().LifestyleTransient());
         }
     }
 }

@@ -13,13 +13,13 @@ namespace Ats.Application.Booking
         ICommandHandler<CancelBookingCommand>,
         ICommandHandler<ConfirmBookingCommand>
     {
-        private readonly BookingService _bookingService;
+        private readonly BookingStartingService _bookingService;
         private readonly DiscountService _discountService;
         private readonly IRepository<BookingAggregate> _bookingRepository;
         private readonly IRepository<FlightInstanceAggregate> _flightInstanceRepository;
 
         public BookingCommandHandlers(
-            BookingService bookingService,
+            BookingStartingService bookingService,
             DiscountService discountService,
             IRepository<BookingAggregate> bookingRepository,
             IRepository<FlightInstanceAggregate> flightInstanceRepository)
@@ -37,8 +37,8 @@ namespace Ats.Application.Booking
 
             _bookingService.StartBooking(flightInstance, booking, command.BookingId);
 
-            await _flightInstanceRepository.SaveAsync(flightInstance.Id, flightInstance, command.FlightInstanceVersion);
-            await _bookingRepository.SaveAsync(booking.Id, booking, 0);
+            await _flightInstanceRepository.SaveAsync(command.FlightInstanceId, flightInstance, command.FlightInstanceVersion);
+            await _bookingRepository.SaveAsync(command.BookingId, booking, 0);
         }
 
         public async Task HandleAsync(RefreshDiscountOffersCommand command)
@@ -47,7 +47,7 @@ namespace Ats.Application.Booking
 
             await _discountService.RefreshDiscountOffersAsync(booking);
 
-            await _bookingRepository.SaveAsync(booking.Id, booking, command.BookingVersion);
+            await _bookingRepository.SaveAsync(command.BookingId, booking, command.BookingVersion);
         }
 
         public async Task HandleAsync(CancelBookingCommand command)
@@ -56,7 +56,7 @@ namespace Ats.Application.Booking
 
             booking.Cancel();
 
-            await _bookingRepository.SaveAsync(booking.Id, booking, command.BookingVersion);
+            await _bookingRepository.SaveAsync(command.BookingId, booking, command.BookingVersion);
         }
 
         public async Task HandleAsync(ConfirmBookingCommand command)
@@ -65,7 +65,7 @@ namespace Ats.Application.Booking
 
             booking.Confirm();
 
-            await _bookingRepository.SaveAsync(booking.Id, booking, command.BookingVersion);
+            await _bookingRepository.SaveAsync(command.BookingId, booking, command.BookingVersion);
         }
     }
 }

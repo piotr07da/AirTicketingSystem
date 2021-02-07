@@ -3,17 +3,22 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30711.63
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ats.Domain", "Ats.Domain\Ats.Domain.csproj", "{3F5B6EFC-95A1-4468-9246-114A514249A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ats.Domain", "Ats.Domain\Ats.Domain.csproj", "{3F5B6EFC-95A1-4468-9246-114A514249A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ats.Tests", "Ats.Tests\Ats.Tests.csproj", "{E4703852-8EC5-4DAC-AB79-F7BE38BA27CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ats.Tests", "Ats.Tests\Ats.Tests.csproj", "{E4703852-8EC5-4DAC-AB79-F7BE38BA27CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ats.Application", "Ats.Application\Ats.Application.csproj", "{97040B9D-9A18-4B1C-A7D5-CBA57986FBA5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ats.Application", "Ats.Application\Ats.Application.csproj", "{97040B9D-9A18-4B1C-A7D5-CBA57986FBA5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ats.Infrastructure", "Ats.Infrastructure\Ats.Infrastructure.csproj", "{D5D8A19A-76AD-477F-8D7E-13677893EB13}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ats.Infrastructure", "Ats.Infrastructure\Ats.Infrastructure.csproj", "{D5D8A19A-76AD-477F-8D7E-13677893EB13}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ats.ComponentsRegistration", "Ats.ComponentsRegistration\Ats.ComponentsRegistration.csproj", "{6CBC11B2-2ADF-4D66-AB6D-28E16A2479FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ats.ComponentsRegistration", "Ats.ComponentsRegistration\Ats.ComponentsRegistration.csproj", "{6CBC11B2-2ADF-4D66-AB6D-28E16A2479FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ats.Core", "Ats.Core\Ats.Core.csproj", "{AF7085B0-0C56-45A5-B461-376DFD4DF94C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ats.Core", "Ats.Core\Ats.Core.csproj", "{AF7085B0-0C56-45A5-B461-376DFD4DF94C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{2E8F05B5-E372-4C6C-A284-5C4D47D37FC4}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,5 +1,6 @@
 ﻿using Ats.Core.Domain;
 using Ats.Domain.Booking;
+using Ats.Domain.Flight;
 using System;
 using System.Collections.Generic;
 
@@ -10,6 +11,7 @@ namespace Ats.Domain.FlightInstance
         private readonly IAggregateEventApplier _aggregateEventApplier;
 
         private FlightInstanceId _id;
+        private FlightUid _flightUid;
         private DateTime _departureDate;
         private HashSet<Guid> _bookings = new HashSet<Guid>();
 
@@ -21,7 +23,13 @@ namespace Ats.Domain.FlightInstance
         public Changes Changes { get; } = new Changes();
 
         public FlightInstanceId Id => _id;
+        public FlightUid FlightUid => _flightUid;
         public DateTime DepartureDate => _departureDate;
+
+        public void Create(FlightInstanceId id, FlightUid flightUid, DateTime departureDate)
+        {
+            _aggregateEventApplier.ApplyNewEvent(new FlightInstanceCreatedEvent(id, flightUid, departureDate));
+        }
 
         public void AddBooking(BookingId bookingId)
         {
@@ -46,6 +54,7 @@ namespace Ats.Domain.FlightInstance
         private void Apply(FlightInstanceCreatedEvent e)
         {
             _id = e.FlightInstanceId;
+            _flightUid = e.FlightUid;
             _departureDate = e.DepartureDate;
         }
 

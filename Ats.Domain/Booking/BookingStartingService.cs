@@ -2,7 +2,7 @@
 
 namespace Ats.Domain.Booking
 {
-    public class BookingService
+    public class BookingStartingService
     {
         public void StartBooking(FlightInstanceAggregate flightInstance, BookingAggregate booking, BookingId bookingId)
         {

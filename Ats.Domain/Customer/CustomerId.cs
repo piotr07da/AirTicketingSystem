@@ -15,6 +15,8 @@ namespace Ats.Domain.FlightInstance
 
         public bool IsDefined => !IsUndefined;
 
+        public override string ToString() => _id.ToString();
+
         public static implicit operator Guid(CustomerId id) => id._id;
         public static implicit operator CustomerId(Guid id) => new CustomerId(id);
     }

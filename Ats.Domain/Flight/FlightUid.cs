@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace Ats.Domain.Booking
+namespace Ats.Domain.Flight
 {
-    public struct BookingId
+    public struct FlightUid
     {
         private readonly Guid _id;
 
-        private BookingId(Guid id)
+        private FlightUid(Guid id)
         {
             _id = id;
         }
@@ -17,7 +17,7 @@ namespace Ats.Domain.Booking
 
         public override string ToString() => _id.ToString();
 
-        public static implicit operator Guid(BookingId id) => id._id;
-        public static implicit operator BookingId(Guid id) => new BookingId(id);
+        public static implicit operator Guid(FlightUid id) => id._id;
+        public static implicit operator FlightUid(Guid id) => new FlightUid(id);
     }
 }

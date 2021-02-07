@@ -18,6 +18,8 @@ namespace Ats.Core.Commands
 
         public async Task DispatchAsync(ICommand command)
         {
+            if (command is null) throw new ArgumentNullException(nameof(command));
+
             var commandType = command.GetType();
 
             if (!_commandHandlersCache.TryGetValue(commandType, out object handler))

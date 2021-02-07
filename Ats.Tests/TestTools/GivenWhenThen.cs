@@ -6,6 +6,11 @@ using System.Linq;
 
 namespace Ats.Tests.TestTools
 {
+    // TODO - trzeba by dodać następujące metody (i ich obsługę w klasie Tester):
+    // - ThenNot - dla walidacji czy dane eventy nie wystąpiły (być może także wersja z dokładnością tylko do typu eventu)
+    // - ThenContains - dla walidacji czy dany event wystapił
+    // a aktualnie zaimplementowana metoda Then powinna zmienić nazwę na ThenExact - dla walidacji czy wystąpiły dokładnie te eventy, które są wskazane. Mogłba by się też pojawić metoda ThenExactAnyOrder - w tym samym celu co ThenExact ale bez walidacji kolejności eventów.
+
     public class GivenWhenThen
     {
         public IDictionary<string, IEnumerable<IEvent>> InitializationEvents { get; private set; } = new Dictionary<string, IEnumerable<IEvent>>();

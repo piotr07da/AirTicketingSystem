@@ -5,15 +5,15 @@ namespace Ats.Domain.FlightInstance
 {
     public class FlightInstanceCreatedEvent : IEvent
     {
-        public FlightInstanceCreatedEvent(Guid flightInstanceId, Guid flightId, DateTime departureDate)
+        public FlightInstanceCreatedEvent(Guid flightInstanceId, Guid flightUid, DateTime departureDate)
         {
             FlightInstanceId = flightInstanceId;
-            FlightId = flightId;
+            FlightUid = flightUid;
             DepartureDate = departureDate;
         }
 
         public Guid FlightInstanceId { get; set; }
-        public Guid FlightId { get; set; }
+        public Guid FlightUid { get; set; }
         public DateTime DepartureDate { get; set; }
     }
 }
