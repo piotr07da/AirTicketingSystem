@@ -8,8 +8,11 @@ W ramach zadania powstały:
 - testy jednostkowe zgodne ze współczesnym rozumieniem jednostek jako operacji publicznego kontraktu systemu. W przypadku zastosowanego podejścia publicznym kontraktem są Commandy wpadające do systemu i wypadające z niego Eventy.
 
 ## Projekt
-Analiza domeny została przeprowadzona dzięki metodzie event storming. Następnie został utworzony prosty diagram zależności obiektów domenowych.
-![ATS project](ats.png)
+Analiza domeny została przeprowadzona dzięki metodzie event storming.
+![ATS event storming](eventstorming.png)
+Następnie został utworzony prosty diagram zależności obiektów domenowych.
+![ATS diagram](diagram.png)
+
 
 ## Agregaty
 
