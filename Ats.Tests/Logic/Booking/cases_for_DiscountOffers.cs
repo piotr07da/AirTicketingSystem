@@ -1,5 +1,6 @@
 ﻿using Ats.Application.Booking;
 using Ats.Core.Domain;
+using Ats.Domain.Airports;
 using Ats.Domain.Booking;
 using Ats.Domain.Customer;
 using Ats.Domain.Flight;
@@ -37,6 +38,7 @@ namespace Ats.Tests.Logic.Booking
             var flightInstanceId = Guid.NewGuid();
 
             await Tester.TestAsync(gwt => gwt
+                .Given(GlobalAirportsId.Id, new AirportAddedEvent(GlobalAirportsId.Id, "BZG", "Europe"), new AirportAddedEvent(GlobalAirportsId.Id, "MGQ", "Africa"))
                 .Given(flightUid, new FlightScheduledEvent(flightUid, "KLM 12345 BCA", "BZG", "MGQ", new[] { DayOfWeek.Thursday }, new TimeSpan(10, 30, 0)))
                 .Given(flightInstanceId, new FlightInstanceCreatedEvent(flightInstanceId, flightUid, new DateTime(2021, 2, 11)))
                 .Given(_bookingId, new BookingStartedEvent(_bookingId, flightInstanceId))
@@ -52,6 +54,7 @@ namespace Ats.Tests.Logic.Booking
             var flightInstanceId = Guid.NewGuid();
 
             await Tester.TestAsync(gwt => gwt
+                .Given(GlobalAirportsId.Id, new AirportAddedEvent(GlobalAirportsId.Id, "BZG", "Europe"), new AirportAddedEvent(GlobalAirportsId.Id, "KUL", "Asia"))
                 .Given(flightUid, new FlightScheduledEvent(flightUid, "KLM 12345 BCA", "BZG", "KUL", new[] { DayOfWeek.Thursday }, new TimeSpan(10, 30, 0)))
                 .Given(flightInstanceId, new FlightInstanceCreatedEvent(flightInstanceId, flightUid, new DateTime(2021, 2, 11)))
                 .Given(_bookingId, new BookingStartedEvent(_bookingId, flightInstanceId))

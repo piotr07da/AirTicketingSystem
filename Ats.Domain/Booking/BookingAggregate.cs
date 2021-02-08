@@ -26,7 +26,7 @@ namespace Ats.Domain.Booking
         public FlightInstanceId FlightInstanceId => _flightInstanceId;
         public CustomerId CustomerId => _customerId;
 
-        public void Start(Guid bookingId, Guid flightInstanceId)
+        public void Start(BookingId bookingId, FlightInstanceId flightInstanceId)
         {
             if (_id.IsDefined) throw new DomainLogicException($"This booking is already started and has id {_id}.");
 

@@ -1,4 +1,5 @@
 ﻿using Ats.Core.Domain;
+using Ats.Domain.Airports;
 using Ats.Domain.FlightInstance;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,8 @@ namespace Ats.Domain.Flight
 
         private FlightUid _uid;
         private FlightId _flightId;
+        private AirportCode _departureAirport;
+        private AirportCode _arrivalAirport;
         private DayOfWeek[] _daysOfWeek;
 
         public FlightAggregate(IAggregateEventApplier aggregateEventApplier)
@@ -21,9 +24,11 @@ namespace Ats.Domain.Flight
         public Changes Changes { get; } = new Changes();
 
         public FlightUid Uid => _uid;
+        public AirportCode DepartureAirport => _departureAirport;
+        public AirportCode ArrivalAirport => _arrivalAirport;
         public DayOfWeek[] DaysOfWeek => _daysOfWeek;
 
-        public void Schedule(FlightUid uid, FlightId flightId, string departureAirport, string arrivalAirport, DayOfWeek[] daysOfWeek, DayTime departureHour)
+        public void Schedule(FlightUid uid, FlightId flightId, AirportCode departureAirport, AirportCode arrivalAirport, DayOfWeek[] daysOfWeek, DayTime departureHour)
         {
             if (_uid.IsDefined)
             {
@@ -74,6 +79,8 @@ namespace Ats.Domain.Flight
         {
             _uid = e.FlightUid;
             _flightId = e.FlightId;
+            _departureAirport = e.DepartureAirport;
+            _arrivalAirport = e.ArrivalAirport;
             _daysOfWeek = e.DaysOfWeek;
         }
 

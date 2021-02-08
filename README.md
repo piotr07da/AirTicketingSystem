@@ -16,6 +16,9 @@ i taki zapis nie powoduje wyjątku nawet jeżeli bookingu jeszcze nie ma. W taki
 Dopiero wywołanie metody Start ten obiekt inicjalizuje.
 Dzięki takiemu podejściu unifikuje się podejście do testów bo zarówno agregaty zainicjalizowane jak i niezainicjalizowane traktujemy w testach tak samo.
 
+Puste (nie zawierające ani jednej linijki kodu) metody Apply są jak najbardziej okej. W przypadku event sourcingu wystąpienie danego eventu zawsze warunkowane jakąś logiką domenową. Natomiast nie zawsze wystąpienie eventu wpływa na dalszą logikę domenową. Jeżli nie wpływa to nie ma sensu w metodzie Apply zapisywać nic do prywatnych pól.
+Przykładem może być wystąpienie eventu NoteAdded. Jeżli od dodania notatki nic dalej nie zależy to wystarczający jest sam fakt występienia tego eventu. Nie będziemy zmieniać stanu pól w agregacie bo na nic to nie wpływa.
+
 Wiadomości w wyjątkach domenowych DomainLogicException są obecnie zhardkodowane po angielsku. W rozwiązaniu docelowym było by to oczywiście miejsce na lokalizację i wykorzystanie resource'ów językowych.
 
 W messageach nie powinny być używane value objecty ze względu na to, że message powinny być immutable, oraz powinny być transportowalne co oznacza, że mogą pochodzić z innych aplikacji napisanych w innych językach. W związku z tym zarówno commandy jak i eventy zawierają:
@@ -23,6 +26,8 @@ W messageach nie powinny być używane value objecty ze względu na to, że mess
 - Guid zamiast CustomerId
 - decimal zamiast Money
 - itd.
+
+W przypadku lotnisk lotnisko nie jest agregatem (w rozubodwanym systemie zapewne by było). Agregatem jest baza lotnisk Airports. Taka baza w cały systemie jest tylko jedna w związku z tym w odróżnieniu od pozostałych agregatów istnieje globalne id bazy lotnisk (klasa GlobalAirportsId).
 
 Commandy i eventy nie zawierają jakichkolwiek walidacji argumentów w swoich konstruktorach.
 Jest tak ponieważ:
