@@ -33,7 +33,7 @@ namespace Ats.Tests.Logic.Booking
             await Tester.TestAsync(_gwt
                 .When(new ApplyBookingDiscountCommand(_bookingId, 3, "Offer1"))
                 .Then(_bookingId,
-                    new BookingPriceChanedEvent(_bookingId, 90.00m),
+                    new BookingPriceChangedEvent(_bookingId, 90.00m),
                     new BookingDiscountAppliedEvent(_bookingId, "Offer1", 10.00m)
                 )
             );
@@ -45,7 +45,7 @@ namespace Ats.Tests.Logic.Booking
             await Tester.TestAsync(_gwt
                 .When(new ApplyBookingDiscountCommand(_bookingId, 3, "Offer2"))
                 .Then(_bookingId,
-                    new BookingPriceChanedEvent(_bookingId, 20.00m),
+                    new BookingPriceChangedEvent(_bookingId, 20.00m),
                     new BookingDiscountAppliedEvent(_bookingId, "Offer2", 95.00m)
                 )
             );
@@ -56,7 +56,7 @@ namespace Ats.Tests.Logic.Booking
         {
             await Tester.TestAsync(_gwt
                 .Given(_bookingId,
-                    new BookingPriceChanedEvent(_bookingId, 90.00m),
+                    new BookingPriceChangedEvent(_bookingId, 90.00m),
                     new BookingDiscountAppliedEvent(_bookingId, "Offer1", 10.00m))
                 .When(new ApplyBookingDiscountCommand(_bookingId, 5, "Offer1"))
                 .Throws<DomainLogicException>("already applied")

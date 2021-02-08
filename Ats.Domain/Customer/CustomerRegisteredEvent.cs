@@ -13,9 +13,9 @@ namespace Ats.Domain.Customer
             Birthday = birthday;
         }
 
-        public Guid CustomerId { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public DateTime Birthday { get; set; }
+        public Guid CustomerId { get; }
+        public string FirstName { get; }
+        public string LastName { get; }
+        public DateTime Birthday { get; }
     }
 }

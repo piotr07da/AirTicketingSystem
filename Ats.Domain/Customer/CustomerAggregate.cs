@@ -4,7 +4,7 @@ using System;
 
 namespace Ats.Domain.Customer
 {
-    public class CustomerAggregate : IChangable
+    public class CustomerAggregate : IChangeable
     {
         private readonly IAggregateEventApplier _aggregateEventApplier;
 

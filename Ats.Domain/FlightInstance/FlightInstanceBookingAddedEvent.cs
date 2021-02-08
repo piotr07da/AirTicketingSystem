@@ -12,6 +12,6 @@ namespace Ats.Domain.FlightInstance
         }
 
         public Guid FlightInstanceId;
-        public Guid BookingId { get; set; }
+        public Guid BookingId { get; }
     }
 }

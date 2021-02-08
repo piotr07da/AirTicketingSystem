@@ -13,9 +13,9 @@ namespace Ats.Domain.FlightInstance
             DepartureDate = departureDate;
         }
 
-        public Guid FlightInstanceId { get; set; }
-        public Guid FlightUid { get; set; }
-        public decimal Price { get; set; }
-        public DateTime DepartureDate { get; set; }
+        public Guid FlightInstanceId { get; }
+        public Guid FlightUid { get; }
+        public decimal Price { get; }
+        public DateTime DepartureDate { get; }
     }
 }

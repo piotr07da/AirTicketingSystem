@@ -11,7 +11,7 @@ namespace Ats.Domain.Booking
             CustomerId = customerId;
         }
 
-        public Guid BookingId { get; set; }
-        public Guid CustomerId { get; set; }
+        public Guid BookingId { get; }
+        public Guid CustomerId { get; }
     }
 }

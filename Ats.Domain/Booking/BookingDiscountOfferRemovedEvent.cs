@@ -3,17 +3,15 @@ using System;
 
 namespace Ats.Domain.Booking
 {
-    public class BookingDiscountOfferAddedEvent : IEvent
+    public class BookingDiscountOfferRemovedEvent : IEvent
     {
-        public BookingDiscountOfferAddedEvent(Guid bookingId, string offerName, decimal offerValue)
+        public BookingDiscountOfferRemovedEvent(Guid bookingId, string offerName)
         {
             BookingId = bookingId;
             OfferName = offerName;
-            OfferValue = offerValue;
         }
 
         public Guid BookingId { get; }
         public string OfferName { get; }
-        public decimal OfferValue { get; }
     }
 }

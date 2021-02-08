@@ -12,8 +12,8 @@ namespace Ats.Application.Booking
             DiscountOfferName = discountOfferName;
         }
 
-        public Guid BookingId { get; set; }
-        public int BookingVersion { get; set; }
-        public string DiscountOfferName { get; set; }
+        public Guid BookingId { get; }
+        public int BookingVersion { get; }
+        public string DiscountOfferName { get; }
     }
 }

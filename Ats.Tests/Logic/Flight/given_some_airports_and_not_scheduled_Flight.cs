@@ -19,13 +19,10 @@ namespace Ats.Tests.Logic.Flight
         private Airport _arrivalAirport = new Airport("KUL", Continent.Asia);
         private DayOfWeek[] _daysOfWeek = new[] { DayOfWeek.Monday, DayOfWeek.Wednesday, DayOfWeek.Friday };
         private TimeSpan _departureHour = new TimeSpan(6, 0, 0);
-        private ScheduleFlightCommand _scheduleFlightCommand;
 
         [SetUp]
         public void SetUp()
         {
-            _scheduleFlightCommand = new ScheduleFlightCommand(_flightUid, _flightId, _departureAirport.Code, _arrivalAirport.Code, _daysOfWeek, _departureHour);
-
             _gwt = new GivenWhenThen()
                 .Given(GlobalAirportsId.Id,
                     new AirportAddedEvent(GlobalAirportsId.Id, _departureAirport.Code, _departureAirport.Continent),
@@ -36,7 +33,7 @@ namespace Ats.Tests.Logic.Flight
         public async Task when_ScheduleFlight_then_flight_scheduled()
         {
             await Tester.TestAsync(_gwt
-                .When(_scheduleFlightCommand)
+                .When(new ScheduleFlightCommand(_flightUid, _flightId, _departureAirport.Code, _arrivalAirport.Code, _daysOfWeek, _departureHour))
                 .Then(_flightUid, new FlightScheduledEvent(_flightUid, _flightId, _departureAirport.Code, _arrivalAirport.Code, _daysOfWeek, _departureHour))
             );
         }
@@ -44,10 +41,8 @@ namespace Ats.Tests.Logic.Flight
         [Test]
         public async Task when_ScheduleFlight_with_not_existing_departure_Airport_then_excpetion_thrown()
         {
-            _scheduleFlightCommand.DepartureAirport = "JFK";
-
             await Tester.TestAsync(_gwt
-                .When(_scheduleFlightCommand)
+                .When(new ScheduleFlightCommand(_flightUid, _flightId, "JFK", _arrivalAirport.Code, _daysOfWeek, _departureHour))
                 .Throws<DomainLogicException>("does not exist")
             );
         }
@@ -55,10 +50,8 @@ namespace Ats.Tests.Logic.Flight
         [Test]
         public async Task when_ScheduleFlight_with_not_existing_arrival_Airport_then_excpetion_thrown()
         {
-            _scheduleFlightCommand.ArrivalAirport = "DXB";
-
             await Tester.TestAsync(_gwt
-                .When(_scheduleFlightCommand)
+                .When(new ScheduleFlightCommand(_flightUid, _flightId, _departureAirport.Code, "DXB", _daysOfWeek, _departureHour))
                 .Throws<DomainLogicException>("does not exist")
             );
         }
@@ -66,10 +59,8 @@ namespace Ats.Tests.Logic.Flight
         [Test]
         public async Task when_ScheduleFlight_with_flight_id_without_airlines_designator_then_excpetion_thrown()
         {
-            _scheduleFlightCommand.FlightId = "99999 XYZ";
-
             await Tester.TestAsync(_gwt
-                .When(_scheduleFlightCommand)
+                .When(new ScheduleFlightCommand(_flightUid, "99999 XYZ", _departureAirport.Code, _arrivalAirport.Code, _daysOfWeek, _departureHour))
                 .Throws<DomainLogicException>("incorrect")
             );
         }
@@ -77,10 +68,8 @@ namespace Ats.Tests.Logic.Flight
         [Test]
         public async Task when_ScheduleFlight_with_duplicated_days_of_week_then_exception_thrown()
         {
-            _scheduleFlightCommand.DaysOfWeek = new[] { DayOfWeek.Tuesday, DayOfWeek.Tuesday };
-
             await Tester.TestAsync(_gwt
-                .When(_scheduleFlightCommand)
+                .When(new ScheduleFlightCommand(_flightUid, _flightId, _departureAirport.Code, _arrivalAirport.Code, new[] { DayOfWeek.Tuesday, DayOfWeek.Tuesday }, _departureHour))
                 .Throws<DomainLogicException>("duplicated")
             );
         }
@@ -88,10 +77,8 @@ namespace Ats.Tests.Logic.Flight
         [Test]
         public async Task when_ScheduleFlight_without_days_of_week_then_exception_thrown()
         {
-            _scheduleFlightCommand.DaysOfWeek = new DayOfWeek[0];
-
             await Tester.TestAsync(_gwt
-                .When(_scheduleFlightCommand)
+                .When(new ScheduleFlightCommand(_flightUid, _flightId, _departureAirport.Code, _arrivalAirport.Code, new DayOfWeek[0], _departureHour))
                 .Throws<DomainLogicException>("no departure days")
             );
         }

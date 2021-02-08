@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Ats.Domain.Booking
 {
-    public class BookingAggregate : IChangable
+    public class BookingAggregate : IChangeable
     {
         private readonly IAggregateEventApplier _aggregateEventApplier;
         private readonly ITenant _tenant;
@@ -31,6 +31,7 @@ namespace Ats.Domain.Booking
         public BookingId Id => _id;
         public FlightInstanceId FlightInstanceId => _flightInstanceId;
         public CustomerId CustomerId => _customerId;
+        public IDictionary<string, DiscountOffer> DiscountOffers => new Dictionary<string, DiscountOffer>(_discountOffers);
 
         public void Start(BookingId bookingId, FlightInstanceId flightInstanceId, FlightInstancePrice flightPrice)
         {
@@ -47,10 +48,24 @@ namespace Ats.Domain.Booking
 
             if (_discountOffers.ContainsKey(discountOffer.Name))
             {
-                throw new DomainLogicException($"{discountOffer.Name} discount offer already exists.");
+                throw new DomainLogicException($"Cannot add {discountOffer.Name} discount offer. This discount offer already exists.");
             }
 
             _aggregateEventApplier.ApplyNewEvent(new BookingDiscountOfferAddedEvent(_id, discountOffer.Name, discountOffer.Value));
+        }
+
+        public void RemoveDiscountOffer(string discountOfferName)
+        {
+            EnsureIsCreated();
+            EnsureIsNotCanceled();
+            EnsureIsNotConfirmed();
+
+            if (!_discountOffers.ContainsKey(discountOfferName))
+            {
+                throw new DomainLogicException($"Cannot remove {discountOfferName} discount offer. This discount offer does not exist for this booking.");
+            }
+
+            _aggregateEventApplier.ApplyNewEvent(new BookingDiscountOfferRemovedEvent(_id, discountOfferName));
         }
 
         public void ApplyDiscountOffer(string discountOfferName)
@@ -72,7 +87,7 @@ namespace Ats.Domain.Booking
             var price = new BookingPrice(_price);
             price.Decrease(discountOffer.Value);
 
-            _aggregateEventApplier.ApplyNewEvent(new BookingPriceChanedEvent(_id, price.Value));
+            _aggregateEventApplier.ApplyNewEvent(new BookingPriceChangedEvent(_id, price.Value));
             if (_tenant.Group == TenantGroup.A)
             {
                 _aggregateEventApplier.ApplyNewEvent(new BookingDiscountAppliedEvent(_id, discountOffer.Name, discountOffer.Value));
@@ -137,7 +152,12 @@ namespace Ats.Domain.Booking
             _discountOffers.Add(e.OfferName, new DiscountOffer(e.OfferName, e.OfferValue));
         }
 
-        private void Apply(BookingPriceChanedEvent e)
+        private void Apply(BookingDiscountOfferRemovedEvent e)
+        {
+            _discountOffers.Remove(e.OfferName);
+        }
+
+        private void Apply(BookingPriceChangedEvent e)
         {
             _price = e.BookingPrice;
         }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Ats.Core.Domain
 {
     public class AggregateFactory<TAggregate> : IAggregateFactory<TAggregate>
-        where TAggregate : class, IChangable
+        where TAggregate : class, IChangeable
     {
         private readonly IAggregateEventApplierFactory _aggregateEventApplierFactory;
         private readonly IAggregateFactory _aggregateFactory;

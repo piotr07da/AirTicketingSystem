@@ -10,6 +10,6 @@ namespace Ats.Domain.Booking
             BookingId = bookingId;
         }
 
-        public Guid BookingId { get; set; }
+        public Guid BookingId { get; }
     }
 }

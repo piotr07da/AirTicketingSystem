@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Ats.Domain.Flight
 {
-    public class FlightAggregate : IChangable
+    public class FlightAggregate : IChangeable
     {
         private readonly IAggregateEventApplier _aggregateEventApplier;
 

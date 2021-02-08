@@ -1,6 +1,6 @@
 ﻿namespace Ats.Core.Domain
 {
-    public interface IChangable
+    public interface IChangeable
     {
         Changes Changes { get; }
     }

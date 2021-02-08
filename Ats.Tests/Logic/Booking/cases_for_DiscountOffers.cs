@@ -17,7 +17,7 @@ namespace Ats.Tests.Logic.Booking
         private Guid _bookingId = Guid.NewGuid();
 
         [Test]
-        public async Task given_FlightInstance_departure_day_and_Customer_birhday_the_same_when_RefreshDiscountOffers_then_BirthdayDiscountOffer_added()
+        public async Task given_FlightInstance_departure_day_equal_to_Customer_birhday_when_RefreshDiscountOffers_then_BirthdayDiscountOffer_added()
         {
             var customerId = Guid.NewGuid();
             var flightInstanceId = Guid.NewGuid();
@@ -25,7 +25,9 @@ namespace Ats.Tests.Logic.Booking
             await Tester.TestAsync(gwt => gwt
                 .Given(customerId, new CustomerRegisteredEvent(customerId, "Piotr", "Bejger", new DateTime(1905, 2, 6)))
                 .Given(flightInstanceId, new FlightInstanceCreatedEvent(flightInstanceId, Guid.NewGuid(), 100.00m, new DateTime(2021, 2, 6)))
-                .Given(_bookingId, new BookingStartedEvent(_bookingId, flightInstanceId, 100.00m), new BookingCustomerAssignedEvent(_bookingId, customerId))
+                .Given(_bookingId,
+                    new BookingStartedEvent(_bookingId, flightInstanceId, 100.00m),
+                    new BookingCustomerAssignedEvent(_bookingId, customerId))
                 .When(new RefreshDiscountOffersCommand(_bookingId, 2))
                 .Then(_bookingId, new BookingDiscountOfferAddedEvent(_bookingId, "BirthdayDiscount", 5.00m)) // Powinno być ThenContains - patrz TODO w klasie GivenWhenThen
             );
@@ -60,6 +62,42 @@ namespace Ats.Tests.Logic.Booking
                 .Given(_bookingId, new BookingStartedEvent(_bookingId, flightInstanceId, 100.00m))
                 .When(new RefreshDiscountOffersCommand(_bookingId, 1))
                 .Then(_bookingId, new IEvent[0]) // Powinno być ThenNot (wraz z podanymi eventem BookingDiscountOfferAddedEvent, który nie powinien wystąpić, to nie znaczy, że nie mogą wystąpić inne discounty) - patrz TODO w klasie GivenWhenThen
+            );
+        }
+
+        [Test]
+        public async Task given_Booking_with_BirthdayDiscount_offer_and_Flight_in_customers_birhday_when_RefreshDiscountOffers_then_BirthdayDiscount_offer_NOT_added_again()
+        {
+            var customerId = Guid.NewGuid();
+            var flightInstanceId = Guid.NewGuid();
+
+            await Tester.TestAsync(gwt => gwt
+                .Given(customerId, new CustomerRegisteredEvent(customerId, "Piotr", "Bejger", new DateTime(1905, 2, 6)))
+                .Given(flightInstanceId, new FlightInstanceCreatedEvent(flightInstanceId, Guid.NewGuid(), 100.00m, new DateTime(2021, 2, 6)))
+                .Given(_bookingId,
+                    new BookingStartedEvent(_bookingId, flightInstanceId, 100.00m),
+                    new BookingCustomerAssignedEvent(_bookingId, customerId),
+                    new BookingDiscountOfferAddedEvent(_bookingId, "BirthdayDiscount", 5.00m))
+                .When(new RefreshDiscountOffersCommand(_bookingId, 3))
+                .Then(_bookingId, new IEvent[0]) // Powinno być ThenNot (wraz z podanymi eventem BookingDiscountOfferAddedEvent, który nie powinien wystąpić, to nie znaczy, że nie mogą wystąpić inne discounty) - patrz TODO w klasie GivenWhenThen
+            );
+        }
+
+        [Test]
+        public async Task given_Booking_with_BirthdayDiscount_offer_and_Flight_not_in_customers_birhday_when_RefreshDiscountOffers_then_BirthdayDiscount_offer_removed()
+        {
+            var customerId = Guid.NewGuid();
+            var flightInstanceId = Guid.NewGuid();
+
+            await Tester.TestAsync(gwt => gwt
+                .Given(customerId, new CustomerRegisteredEvent(customerId, "Piotr", "Bejger", new DateTime(1905, 2, 6)))
+                .Given(flightInstanceId, new FlightInstanceCreatedEvent(flightInstanceId, Guid.NewGuid(), 100.00m, new DateTime(2021, 2, 5)))
+                .Given(_bookingId,
+                    new BookingStartedEvent(_bookingId, flightInstanceId, 100.00m),
+                    new BookingCustomerAssignedEvent(_bookingId, customerId),
+                    new BookingDiscountOfferAddedEvent(_bookingId, "BirthdayDiscount", 5.00m))
+                .When(new RefreshDiscountOffersCommand(_bookingId, 3))
+                .Then(_bookingId, new BookingDiscountOfferRemovedEvent(_bookingId, "BirthdayDiscount"))
             );
         }
     }

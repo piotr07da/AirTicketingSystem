@@ -15,11 +15,11 @@ namespace Ats.Application.Flight
             DepartureHour = departureHour;
         }
 
-        public Guid FlightUid { get; set; }
-        public string FlightId { get; set; }
-        public string DepartureAirport { get; set; }
-        public string ArrivalAirport { get; set; }
-        public DayOfWeek[] DaysOfWeek { get; set; }
-        public TimeSpan DepartureHour { get; set; }
+        public Guid FlightUid { get; }
+        public string FlightId { get; }
+        public string DepartureAirport { get; }
+        public string ArrivalAirport { get; }
+        public DayOfWeek[] DaysOfWeek { get; }
+        public TimeSpan DepartureHour { get; }
     }
 }

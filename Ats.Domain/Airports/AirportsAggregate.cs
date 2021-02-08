@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Ats.Domain.Airports
 {
-    public class AirportsAggregate : IChangable
+    public class AirportsAggregate : IChangeable
     {
         private readonly IAggregateEventApplier _aggregateEventApplier;
 

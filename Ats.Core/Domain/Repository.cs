@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace Ats.Core.Domain
 {
     public class Repository<TAggregate> : IRepository<TAggregate>
-        where TAggregate : class, IChangable
+        where TAggregate : class, IChangeable
     {
         private readonly IAggregateFactory<TAggregate> _aggregateFactory;
         private readonly IRepositoryEventStore _repositoryEventStore;

@@ -12,8 +12,8 @@ namespace Ats.Domain.Booking
             DiscountValue = discountValue;
         }
 
-        public Guid BookingId { get; set; }
-        public string DiscountOfferName { get; set; }
-        public decimal DiscountValue { get; set; }
+        public Guid BookingId { get; }
+        public string DiscountOfferName { get; }
+        public decimal DiscountValue { get; }
     }
 }

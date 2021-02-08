@@ -19,7 +19,17 @@ namespace Ats.Domain.Booking
             {
                 if (await criterion.CheckForAsync(booking))
                 {
-                    booking.AddDiscountOffer(new DiscountOffer(criterion.DiscountOfferName, 5.00m));
+                    if (!booking.DiscountOffers.ContainsKey(criterion.DiscountOfferName))
+                    {
+                        booking.AddDiscountOffer(new DiscountOffer(criterion.DiscountOfferName, 5.00m));
+                    }
+                }
+                else
+                {
+                    if (booking.DiscountOffers.ContainsKey(criterion.DiscountOfferName))
+                    {
+                        booking.RemoveDiscountOffer(criterion.DiscountOfferName);
+                    }
                 }
             }
         }

@@ -13,9 +13,9 @@ namespace Ats.Application.Airports
             AirportContinent = airportContinent;
         }
 
-        public Guid AirportsId { get; set; }
-        public int AirportsVersion { get; set; }
-        public string AirportCode { get; set; }
-        public string AirportContinent { get; set; }
+        public Guid AirportsId { get; }
+        public int AirportsVersion { get; }
+        public string AirportCode { get; }
+        public string AirportContinent { get; }
     }
 }

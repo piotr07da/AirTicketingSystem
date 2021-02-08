@@ -7,7 +7,7 @@ namespace Ats.Core.Domain
     {
         private readonly IEventApplierActionsExtractor _eventApplierActionsExtractor;
 
-        private IChangable _registeredAggregate;
+        private IChangeable _registeredAggregate;
         private IDictionary<Type, EventApplierAction> _eventApplierActions;
 
         public AggregateEventApplier(IEventApplierActionsExtractor eventApplierActionsExtractor)
@@ -15,7 +15,7 @@ namespace Ats.Core.Domain
             _eventApplierActionsExtractor = eventApplierActionsExtractor ?? throw new ArgumentNullException(nameof(eventApplierActionsExtractor));
         }
 
-        public void Register(IChangable aggregate)
+        public void Register(IChangeable aggregate)
         {
             if (_registeredAggregate != null)
                 throw new InvalidOperationException($"Cannot register an aggregate. Another aggregate has been registered first. Probable cause - {nameof(AggregateEventApplier)} is singleton, you need to create new instance per each aggregate.");

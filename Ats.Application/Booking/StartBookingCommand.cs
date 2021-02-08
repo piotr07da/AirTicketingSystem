@@ -12,8 +12,8 @@ namespace Ats.Application.Booking
             FlightInstanceVersion = flightInstanceVersion;
         }
 
-        public Guid BookingId { get; set; }
-        public Guid FlightInstanceId { get; set; }
-        public int FlightInstanceVersion { get; set; }
+        public Guid BookingId { get; }
+        public Guid FlightInstanceId { get; }
+        public int FlightInstanceVersion { get; }
     }
 }

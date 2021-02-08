@@ -12,9 +12,9 @@ namespace Ats.Application.Airports
         private readonly IRepository<AirportsAggregate> _airportsRepository;
 
         public AirportsCommandHandlers(
-            IRepository<AirportsAggregate> flightRepository)
+            IRepository<AirportsAggregate> airportsRepository)
         {
-            _airportsRepository = flightRepository ?? throw new ArgumentNullException(nameof(flightRepository));
+            _airportsRepository = airportsRepository ?? throw new ArgumentNullException(nameof(airportsRepository));
         }
 
         public async Task HandleAsync(AddAirportCommand command)

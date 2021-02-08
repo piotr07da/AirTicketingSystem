@@ -11,7 +11,7 @@ namespace Ats.Application.Booking
             BookingVersion = bookingVersion;
         }
 
-        public Guid BookingId { get; set; }
-        public int BookingVersion { get; set; }
+        public Guid BookingId { get; }
+        public int BookingVersion { get; }
     }
 }
