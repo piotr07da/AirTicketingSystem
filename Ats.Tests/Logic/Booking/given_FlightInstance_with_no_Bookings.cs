@@ -20,7 +20,7 @@ namespace Ats.Tests.Logic.Booking
             _flightInstanceId = Guid.NewGuid();
 
             _gwt = new GivenWhenThen()
-                .Given(_flightInstanceId, new FlightInstanceCreatedEvent(_flightInstanceId, Guid.NewGuid(), DateTime.Now));
+                .Given(_flightInstanceId, new FlightInstanceCreatedEvent(_flightInstanceId, Guid.NewGuid(), 100.00m, DateTime.Now));
         }
 
         [Test]
@@ -31,7 +31,7 @@ namespace Ats.Tests.Logic.Booking
             await Tester.TestAsync(_gwt
                 .When(new StartBookingCommand(bookingId, _flightInstanceId, 1))
                 .Then(_flightInstanceId, new FlightInstanceBookingAddedEvent(_flightInstanceId, bookingId))
-                .Then(bookingId, new BookingStartedEvent(bookingId, _flightInstanceId))
+                .Then(bookingId, new BookingStartedEvent(bookingId, _flightInstanceId, 100.00m))
                 );
         }
     }

@@ -12,6 +12,7 @@ namespace Ats.Domain.FlightInstance
 
         private FlightInstanceId _id;
         private FlightUid _flightUid;
+        private FlightInstancePrice _price;
         private DateTime _departureDate;
         private HashSet<Guid> _bookings = new HashSet<Guid>();
 
@@ -24,11 +25,13 @@ namespace Ats.Domain.FlightInstance
 
         public FlightInstanceId Id => _id;
         public FlightUid FlightUid => _flightUid;
+        public FlightInstancePrice Price => _price;
         public DateTime DepartureDate => _departureDate;
 
-        public void Create(FlightInstanceId id, FlightUid flightUid, DateTime departureDate)
+
+        public void Create(FlightInstanceId id, FlightUid flightUid, FlightInstancePrice price, DateTime departureDate)
         {
-            _aggregateEventApplier.ApplyNewEvent(new FlightInstanceCreatedEvent(id, flightUid, departureDate));
+            _aggregateEventApplier.ApplyNewEvent(new FlightInstanceCreatedEvent(id, flightUid, price.Value, departureDate));
         }
 
         public void AddBooking(BookingId bookingId)
@@ -55,6 +58,7 @@ namespace Ats.Domain.FlightInstance
         {
             _id = e.FlightInstanceId;
             _flightUid = e.FlightUid;
+            _price = new FlightInstancePrice(e.Price);
             _departureDate = e.DepartureDate;
         }
 

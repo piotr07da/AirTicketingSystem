@@ -3,17 +3,15 @@ using System;
 
 namespace Ats.Domain.Booking
 {
-    public class BookingStartedEvent : IEvent
+    public class BookingPriceChanedEvent : IEvent
     {
-        public BookingStartedEvent(Guid bookingId, Guid flightInstanceId, decimal bookingPrice)
+        public BookingPriceChanedEvent(Guid bookingId, decimal bookingPrice)
         {
             BookingId = bookingId;
-            FlightInstanceId = flightInstanceId;
             BookingPrice = bookingPrice;
         }
 
         public Guid BookingId { get; set; }
-        public Guid FlightInstanceId { get; set; }
         public decimal BookingPrice { get; set; }
     }
 }

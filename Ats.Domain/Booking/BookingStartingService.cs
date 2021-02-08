@@ -7,7 +7,7 @@ namespace Ats.Domain.Booking
         public void StartBooking(FlightInstanceAggregate flightInstance, BookingAggregate booking, BookingId bookingId)
         {
             flightInstance.AddBooking(bookingId);
-            booking.Start(bookingId, flightInstance.Id);
+            booking.Start(bookingId, flightInstance.Id, flightInstance.Price);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Ats.Tests.Logic.Booking
             _bookingId = Guid.NewGuid();
 
             _gwt = new GivenWhenThen()
-                .Given(_bookingId, new BookingStartedEvent(_bookingId, Guid.NewGuid()));
+                .Given(_bookingId, new BookingStartedEvent(_bookingId, Guid.NewGuid(), 50.00m));
 
         }
 

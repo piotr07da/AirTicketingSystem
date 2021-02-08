@@ -2,22 +2,28 @@
 using Ats.Domain.FlightInstance;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Ats.Domain.Booking
 {
     public class BookingAggregate : IChangable
     {
         private readonly IAggregateEventApplier _aggregateEventApplier;
+        private readonly ITenant _tenant;
 
         private BookingId _id;
         private FlightInstanceId _flightInstanceId;
         private CustomerId _customerId;
+        private decimal _price;
         private IDictionary<string, DiscountOffer> _discountOffers = new Dictionary<string, DiscountOffer>();
+        private HashSet<string> _appliedDiscounts = new HashSet<string>();
         private bool _isCanceled;
+        private bool _isConfirmed;
 
-        public BookingAggregate(IAggregateEventApplier aggregateEventApplier)
+        public BookingAggregate(IAggregateEventApplier aggregateEventApplier, ITenant tenant)
         {
             _aggregateEventApplier = aggregateEventApplier ?? throw new ArgumentNullException(nameof(aggregateEventApplier));
+            _tenant = tenant ?? throw new ArgumentNullException(nameof(tenant));
         }
 
         public Changes Changes { get; } = new Changes();
@@ -26,21 +32,51 @@ namespace Ats.Domain.Booking
         public FlightInstanceId FlightInstanceId => _flightInstanceId;
         public CustomerId CustomerId => _customerId;
 
-        public void Start(BookingId bookingId, FlightInstanceId flightInstanceId)
+        public void Start(BookingId bookingId, FlightInstanceId flightInstanceId, FlightInstancePrice flightPrice)
         {
             if (_id.IsDefined) throw new DomainLogicException($"This booking is already started and has id {_id}.");
 
-            _aggregateEventApplier.ApplyNewEvent(new BookingStartedEvent(bookingId, flightInstanceId));
+            _aggregateEventApplier.ApplyNewEvent(new BookingStartedEvent(bookingId, flightInstanceId, flightPrice.Value));
         }
 
         public void AddDiscountOffer(DiscountOffer discountOffer)
         {
+            EnsureIsCreated();
+            EnsureIsNotCanceled();
+            EnsureIsNotConfirmed();
+
             if (_discountOffers.ContainsKey(discountOffer.Name))
             {
                 throw new DomainLogicException($"{discountOffer.Name} discount offer already exists.");
             }
 
             _aggregateEventApplier.ApplyNewEvent(new BookingDiscountOfferAddedEvent(_id, discountOffer.Name, discountOffer.Value));
+        }
+
+        public void ApplyDiscountOffer(string discountOfferName)
+        {
+            EnsureIsCreated();
+            EnsureIsNotCanceled();
+            EnsureIsNotConfirmed();
+
+            if (!_discountOffers.TryGetValue(discountOfferName, out DiscountOffer discountOffer))
+            {
+                throw new DomainLogicException($"{discountOfferName} discount is not available for this booking. Available discount offers are [{string.Join(", ", _discountOffers.Values.Select(d => d.Name))}].");
+            }
+
+            if (_appliedDiscounts.Contains(discountOffer.Name))
+            {
+                throw new DomainLogicException($"{discountOffer.Name} has been already applied.");
+            }
+
+            var price = new BookingPrice(_price);
+            price.Decrease(discountOffer.Value);
+
+            _aggregateEventApplier.ApplyNewEvent(new BookingPriceChanedEvent(_id, price.Value));
+            if (_tenant.Group == TenantGroup.A)
+            {
+                _aggregateEventApplier.ApplyNewEvent(new BookingDiscountAppliedEvent(_id, discountOffer.Name, discountOffer.Value));
+            }
         }
 
         public void Cancel()
@@ -68,10 +104,27 @@ namespace Ats.Domain.Booking
             }
         }
 
+        private void EnsureIsNotCanceled()
+        {
+            if (_isCanceled)
+            {
+                throw new DomainLogicException($"This booking has been canceled.");
+            }
+        }
+
+        private void EnsureIsNotConfirmed()
+        {
+            if (_isConfirmed)
+            {
+                throw new DomainLogicException($"This booking has been confirmed.");
+            }
+        }
+
         private void Apply(BookingStartedEvent e)
         {
             _id = e.BookingId;
             _flightInstanceId = e.FlightInstanceId;
+            _price = e.BookingPrice;
         }
 
         private void Apply(BookingCustomerAssignedEvent e)
@@ -82,6 +135,16 @@ namespace Ats.Domain.Booking
         private void Apply(BookingDiscountOfferAddedEvent e)
         {
             _discountOffers.Add(e.OfferName, new DiscountOffer(e.OfferName, e.OfferValue));
+        }
+
+        private void Apply(BookingPriceChanedEvent e)
+        {
+            _price = e.BookingPrice;
+        }
+
+        private void Apply(BookingDiscountAppliedEvent e)
+        {
+            _appliedDiscounts.Add(e.DiscountOfferName);
         }
 
         private void Apply(BookingCanceledEvent e)

@@ -40,6 +40,7 @@ Są ku temu dwa powody:
 - klucze naturalne są problematyczne, potrafią okazywać się nieunikalnymi, rozszerzać się itd. w związku z tym nie mogłem zamiast klucza unikalnego wykorzystać tego klucza
 
 Opis zadania pozostawia pytania np.:
+- Co w sytuacji gdy w przypadku tenanta B nie zostaną zapisane zniżki, a TicketingAgent jeszcze raz zastosuje daną niżkę. Teoretycznie może zastosować daną zniżkę 1000000 razy bo bez zapisywania zastosowanych zniżek nie da się przed tym zabezpieczyć.
 - Co w sytuacji gdy cena bazowa instancji lotu zostanie zmieniona?
 - Co w sytuacji gdy w przypadku tenanta B nie zostaną zapisane zniżki, a nastąpi zmiana ceny bazowej instancji lotu albo nastąpi przeliczenie dostępnych kryteriów zniżkowych - np. niektóre kryteria zostaną wyłączone w trakcie rezerwowania lotu?
 W związku z tym implementacja zawiera wyłącznie taką ligikę domenową jaka wynika bezpośrednio z treści zadania.

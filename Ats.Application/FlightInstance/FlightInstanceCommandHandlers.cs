@@ -29,7 +29,7 @@ namespace Ats.Application.FlightInstance
             var flight = await _flightRepository.GetAsync(command.FlightUid);
             var flightInstance = await _flightInstanceRepository.GetAsync(command.FlightInstanceId);
 
-            _flightInstanceCreationService.CreateFlightInstance(flight, flightInstance, command.FlightInstanceId, command.DepartureDate);
+            _flightInstanceCreationService.CreateFlightInstance(flight, flightInstance, command.FlightInstanceId, new FlightInstancePrice(command.Price), command.DepartureDate);
 
             await _flightRepository.SaveAsync(command.FlightUid, flight, command.FlightVersion);
             await _flightInstanceRepository.SaveAsync(command.FlightInstanceId, flightInstance, 0);

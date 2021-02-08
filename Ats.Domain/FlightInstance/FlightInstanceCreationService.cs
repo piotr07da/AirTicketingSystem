@@ -6,7 +6,7 @@ namespace Ats.Domain.FlightInstance
 {
     public class FlightInstanceCreationService
     {
-        public void CreateFlightInstance(FlightAggregate flight, FlightInstanceAggregate flightInstance, FlightInstanceId flightInstanceId, DateTime departureDate)
+        public void CreateFlightInstance(FlightAggregate flight, FlightInstanceAggregate flightInstance, FlightInstanceId flightInstanceId, FlightInstancePrice price, DateTime departureDate)
         {
             if (!flight.DaysOfWeek.Contains(departureDate.DayOfWeek))
             {
@@ -14,7 +14,7 @@ namespace Ats.Domain.FlightInstance
             }
 
             flight.AddFlightInstance(flightInstanceId);
-            flightInstance.Create(flightInstanceId, flight.Uid, departureDate);
+            flightInstance.Create(flightInstanceId, flight.Uid, price, departureDate);
         }
     }
 }

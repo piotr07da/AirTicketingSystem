@@ -10,6 +10,7 @@ namespace Ats.Application.Booking
     public class BookingCommandHandlers :
         ICommandHandler<StartBookingCommand>,
         ICommandHandler<RefreshDiscountOffersCommand>,
+        ICommandHandler<ApplyBookingDiscountCommand>,
         ICommandHandler<CancelBookingCommand>,
         ICommandHandler<ConfirmBookingCommand>
     {
@@ -46,6 +47,15 @@ namespace Ats.Application.Booking
             var booking = await _bookingRepository.GetAsync(command.BookingId);
 
             await _discountService.RefreshDiscountOffersAsync(booking);
+
+            await _bookingRepository.SaveAsync(command.BookingId, booking, command.BookingVersion);
+        }
+
+        public async Task HandleAsync(ApplyBookingDiscountCommand command)
+        {
+            var booking = await _bookingRepository.GetAsync(command.BookingId);
+
+            booking.ApplyDiscountOffer(command.DiscountOfferName);
 
             await _bookingRepository.SaveAsync(command.BookingId, booking, command.BookingVersion);
         }

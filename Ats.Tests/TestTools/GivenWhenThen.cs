@@ -14,25 +14,34 @@ namespace Ats.Tests.TestTools
     public class GivenWhenThen
     {
         public IDictionary<string, IEnumerable<IEvent>> InitializationEvents { get; private set; } = new Dictionary<string, IEnumerable<IEvent>>();
-        public ICommand CommandToExecute { get; private set; }
+        public IList<ICommand> CommandsToExecute { get; private set; } = new List<ICommand>();
         public IDictionary<string, IEnumerable<IEvent>> ExpectedEvents { get; private set; } = new Dictionary<string, IEnumerable<IEvent>>();
         public ExceptionExpectation ExpectedException { get; private set; }
 
         public GivenWhenThen Given(Guid eventStreamId, IEnumerable<IEvent> initializationEvents)
         {
-            InitializationEvents.Add(eventStreamId.ToString(), initializationEvents);
+            Given(eventStreamId, initializationEvents.ToArray());
             return this;
         }
 
         public GivenWhenThen Given(Guid eventStreamId, params IEvent[] initializationEvents)
         {
-            InitializationEvents.Add(eventStreamId.ToString(), initializationEvents);
+            var key = eventStreamId.ToString();
+
+            if (InitializationEvents.TryGetValue(key, out IEnumerable<IEvent> currentInitializationEvents))
+            {
+                InitializationEvents[key] = currentInitializationEvents.Union(initializationEvents).ToArray();
+            }
+            else
+            {
+                InitializationEvents.Add(key, initializationEvents);
+            }
             return this;
         }
 
         public GivenWhenThen When(ICommand commandToExecute)
         {
-            CommandToExecute = commandToExecute;
+            CommandsToExecute.Add(commandToExecute);
             return this;
         }
 

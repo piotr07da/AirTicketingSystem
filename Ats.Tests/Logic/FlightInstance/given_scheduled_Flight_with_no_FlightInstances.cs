@@ -28,12 +28,13 @@ namespace Ats.Tests.Logic.FlightInstance
         public async Task when_CreateFlightInstance_then_FlightInstance_created_and_added_to_scheduled_Flight()
         {
             var flightInstanceId = Guid.NewGuid();
+            var price = 120.00m;
             var departureDate = new DateTime(2021, 2, 7);
 
             await Tester.TestAsync(_gwt
-                .When(new CreateFlightInstanceCommand(flightInstanceId, _flightUid, 1, departureDate))
+                .When(new CreateFlightInstanceCommand(flightInstanceId, _flightUid, 1, price, departureDate))
                 .Then(_flightUid, new FlightInstanceAddedEvent(_flightUid, flightInstanceId))
-                .Then(flightInstanceId, new FlightInstanceCreatedEvent(flightInstanceId, _flightUid, departureDate))
+                .Then(flightInstanceId, new FlightInstanceCreatedEvent(flightInstanceId, _flightUid, price, departureDate))
             );
         }
 
@@ -44,7 +45,7 @@ namespace Ats.Tests.Logic.FlightInstance
             var departureDate = new DateTime(2021, 2, 8); // this is Monday but flight is scheduled for Tuesday and Sunday (check given() method)
 
             await Tester.TestAsync(_gwt
-                .When(new CreateFlightInstanceCommand(flightInstanceId, _flightUid, 1, departureDate))
+                .When(new CreateFlightInstanceCommand(flightInstanceId, _flightUid, 1, 150.0m, departureDate))
                 .Throws<DomainLogicException>("incorrect day of week")
             );
         }

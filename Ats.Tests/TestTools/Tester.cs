@@ -45,7 +45,10 @@ namespace Ats.Tests.TestTools
             Exception thrownException = null;
             try
             {
-                await commandDispatcher.DispatchAsync(gwt.CommandToExecute);
+                foreach (var cte in gwt.CommandsToExecute)
+                {
+                    await commandDispatcher.DispatchAsync(cte);
+                }
             }
             catch (Exception ex)
             {
@@ -81,7 +84,7 @@ namespace Ats.Tests.TestTools
                 }
                 else
                 {
-                    Assert.Fail($"Unexpected exception has been thrown. Expected exception type was {ee.ExceptionType.Name} but thrown exception is of type {thrownException.GetType().Name}.");
+                    Assert.Fail($"Unexpected exception has been thrown. Expected exception type was {ee.ExceptionType.Name} but thrown exception is of type {thrownException.GetType().Name} and exception is {thrownException.ToString()}.");
                 }
             }
         }

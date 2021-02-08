@@ -13,6 +13,7 @@ namespace Ats.Tests.Di
         {
             container.Register(Component.For<IRepositoryEventStore>().ImplementedBy<FakeRepositoryEventStore>().IsDefault().LifestyleTransient());
             container.Register(Component.For<IDateTimeProvider>().ImplementedBy<FakeDateTimeProvider>().IsDefault().LifestyleTransient());
+            container.Register(Component.For<ITenant>().ImplementedBy<FakeTenant>().IsDefault().LifestyleTransient());
         }
     }
 }

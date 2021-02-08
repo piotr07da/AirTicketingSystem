@@ -24,7 +24,7 @@ namespace Ats.Tests.Logic.Booking
             var bookingId = Guid.NewGuid();
 
             await Tester.TestAsync(gwt => gwt
-                .Given(_flightInstanceId, new FlightInstanceCreatedEvent(_flightInstanceId, Guid.NewGuid(), DateTime.Now), new FlightInstanceBookingAddedEvent(_flightInstanceId, bookingId))
+                .Given(_flightInstanceId, new FlightInstanceCreatedEvent(_flightInstanceId, Guid.NewGuid(), 50.00m, DateTime.Now), new FlightInstanceBookingAddedEvent(_flightInstanceId, bookingId))
                 .When(new StartBookingCommand(bookingId, _flightInstanceId, 2))
                 .Throws<DomainLogicException>("already")
                 );
