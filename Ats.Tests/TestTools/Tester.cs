@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Ats.Tests.TestTools
@@ -57,80 +56,56 @@ namespace Ats.Tests.TestTools
 
             // THEN
 
-            var ee = gwt.ExpectedException;
-            if (ee == null)
+            var expectedException = gwt.ExpectedException;
+            if (expectedException == null)
             {
                 if (thrownException != null)
                 {
                     Assert.Fail(thrownException.ToString());
                 }
 
-                AssertEventStreamsAreEqual(gwt.ExpectedEvents, FakeRepositoryEventStore.SavedAggregateChanges);
+                AssertEventStreamsMeetExpectations(gwt.ExpectedEvents, FakeRepositoryEventStore.SavedAggregateChanges);
             }
             else
             {
                 if (thrownException == null)
                 {
-                    Assert.Fail($"Expected exception [{ee.ExceptionType.Name}] has not been thrown. Following events were produced instead: [{string.Join(", ", FakeRepositoryEventStore.SavedAggregateChanges.SelectMany(streamKvp => streamKvp.Value).Select(e => e.GetType().Name))}].");
+                    Assert.Fail($"Expected exception [{expectedException.ExceptionType.Name}] has not been thrown. Following events were produced instead: [{string.Join(", ", FakeRepositoryEventStore.SavedAggregateChanges.SelectMany(streamKvp => streamKvp.Value).Select(e => e.GetType().Name))}].");
                 }
 
-                if (ee.ExceptionType.IsAssignableFrom(thrownException.GetType()))
+                if (expectedException.ExceptionType.IsAssignableFrom(thrownException.GetType()))
                 {
-                    if (ee.ExceptionMessage != null)
+                    if (expectedException.ExceptionMessage != null)
                     {
-                        if (!thrownException.Message.Contains(ee.ExceptionMessage, StringComparison.OrdinalIgnoreCase))
-                            Assert.Fail($"Expected [{ee.ExceptionType.Name}] has been thrown but message [{thrownException.Message}] doesn't match with [{ee.ExceptionMessage}].");
+                        if (!thrownException.Message.Contains(expectedException.ExceptionMessage, StringComparison.OrdinalIgnoreCase))
+                            Assert.Fail($"Expected [{expectedException.ExceptionType.Name}] has been thrown but message [{thrownException.Message}] doesn't match with [{expectedException.ExceptionMessage}].");
                     }
                 }
                 else
                 {
-                    Assert.Fail($"Unexpected exception has been thrown. Expected exception type was {ee.ExceptionType.Name} but thrown exception is of type {thrownException.GetType().Name} and exception is {thrownException.ToString()}.");
+                    Assert.Fail($"Unexpected exception has been thrown. Expected exception type was {expectedException.ExceptionType.Name} but thrown exception is of type {thrownException.GetType().Name} and exception is {thrownException.ToString()}.");
                 }
             }
         }
 
-        private void AssertEventStreamsAreEqual(IDictionary<string, IEnumerable<IEvent>> expectedEventStreams, IDictionary<string, IEnumerable<IEvent>> publishedEventStreams)
+        private void AssertEventStreamsMeetExpectations(IDictionary<string, IEventsExpectation> eventsExpectations, IDictionary<string, IEnumerable<IEvent>> publishedEventStreams)
         {
-            if (expectedEventStreams == null || publishedEventStreams == null)
-                Assert.Fail($"Expected and published events streams are not equal or both are nulls.");
+            if (eventsExpectations is null) throw new ArgumentNullException(nameof(eventsExpectations));
+            if (publishedEventStreams is null) throw new ArgumentNullException(nameof(publishedEventStreams));
 
-            if (expectedEventStreams.Count != publishedEventStreams.Count)
-                Assert.Fail($"Expected and published events streams are not equal. There is different number of expected and published event streams. Expected {expectedEventStreams.Count}, published {publishedEventStreams.Count}.");
+            if (eventsExpectations.Count != publishedEventStreams.Count)
+                Assert.Fail($"Streams with events expectations and streams with published events are not same streams. There is different number of streams with expectations and streams with published events. Expected {eventsExpectations.Count}, published {publishedEventStreams.Count}.");
 
-            foreach (var expEvtStreamKvp in expectedEventStreams)
+            foreach (var expEvtStreamKvp in eventsExpectations)
             {
                 var streamName = expEvtStreamKvp.Key;
-                var expectedEvents = expEvtStreamKvp.Value;
+                var eventsExpectation = expEvtStreamKvp.Value;
+
                 if (!publishedEventStreams.TryGetValue(streamName, out IEnumerable<IEvent> publishedEvents))
-                    Assert.Fail($"There is no published event stream with name {streamName} which is expected.");
+                    Assert.Fail($"There is no published event stream with name {streamName} which has events expectation.");
 
-                AssertEventsAreEqual(expectedEvents, publishedEvents);
+                eventsExpectation.Verify(publishedEvents);
             }
-        }
-
-        private void AssertEventsAreEqual(IEnumerable<IEvent> expectedEvents, IEnumerable<IEvent> publishedEvents)
-        {
-            AssertEventsAreEqual(expectedEvents.ToArray(), publishedEvents.ToArray());
-        }
-
-        private void AssertEventsAreEqual(IEvent[] expectedEvents, IEvent[] publishedEvents)
-        {
-            if (expectedEvents.Length != publishedEvents.Length)
-                Assert.Fail($"Expected and published events are not the same.{Environment.NewLine}Expected: [{string.Join(",", expectedEvents.Select(ee => ee.GetType().Name))}]{Environment.NewLine}But was: [{string.Join(",", publishedEvents.Select(ee => ee.GetType().Name))}]");
-
-            for (var i = 0; i < expectedEvents.Length; ++i)
-            {
-                var expEvt = expectedEvents[i];
-                var pubEvt = publishedEvents[i];
-                var expEvtSer = Serialize(expEvt);
-                var pubEvtSer = Serialize(pubEvt);
-                Assert.AreEqual(expEvtSer, pubEvtSer, $"Published event of type {pubEvt.GetType().Name} has different data than expected one.");
-            }
-        }
-
-        private string Serialize(object value)
-        {
-            return JsonSerializer.Serialize(value);
         }
 
         private IWindsorContainer BoostrapContainer()

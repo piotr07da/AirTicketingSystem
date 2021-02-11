@@ -21,7 +21,7 @@ namespace Ats.Tests.Logic.Airports
         {
             await Tester.TestAsync(_gwt
                 .When(new AddAirportCommand(GlobalAirportsId.Id, 0, "KUL", "Asia"))
-                .Then(GlobalAirportsId.Id, new AirportAddedEvent(GlobalAirportsId.Id, "KUL", "Asia"))
+                .ThenIdentical(GlobalAirportsId.Id, new AirportAddedEvent(GlobalAirportsId.Id, "KUL", "Asia"))
             );
         }
     }

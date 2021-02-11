@@ -30,8 +30,8 @@ namespace Ats.Tests.Logic.Booking
 
             await Tester.TestAsync(_gwt
                 .When(new StartBookingCommand(bookingId, _flightInstanceId, 1))
-                .Then(_flightInstanceId, new FlightInstanceBookingAddedEvent(_flightInstanceId, bookingId))
-                .Then(bookingId, new BookingStartedEvent(bookingId, _flightInstanceId, 100.00m))
+                .ThenIdentical(_flightInstanceId, new FlightInstanceBookingAddedEvent(_flightInstanceId, bookingId))
+                .ThenIdentical(bookingId, new BookingStartedEvent(bookingId, _flightInstanceId, 100.00m))
                 );
         }
     }

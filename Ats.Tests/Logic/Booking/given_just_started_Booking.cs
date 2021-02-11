@@ -28,7 +28,7 @@ namespace Ats.Tests.Logic.Booking
         {
             await Tester.TestAsync(_gwt
                 .When(new CancelBookingCommand(_bookingId, 1))
-                .Then(_bookingId, new BookingCanceledEvent(_bookingId))
+                .ThenIdentical(_bookingId, new BookingCanceledEvent(_bookingId))
                 );
         }
 

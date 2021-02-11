@@ -33,8 +33,8 @@ namespace Ats.Tests.Logic.FlightInstance
 
             await Tester.TestAsync(_gwt
                 .When(new CreateFlightInstanceCommand(flightInstanceId, _flightUid, 1, price, departureDate))
-                .Then(_flightUid, new FlightInstanceAddedEvent(_flightUid, flightInstanceId))
-                .Then(flightInstanceId, new FlightInstanceCreatedEvent(flightInstanceId, _flightUid, price, departureDate))
+                .ThenIdentical(_flightUid, new FlightInstanceAddedEvent(_flightUid, flightInstanceId))
+                .ThenIdentical(flightInstanceId, new FlightInstanceCreatedEvent(flightInstanceId, _flightUid, price, departureDate))
             );
         }
 

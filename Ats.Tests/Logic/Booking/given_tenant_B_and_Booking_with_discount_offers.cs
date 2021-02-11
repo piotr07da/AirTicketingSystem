@@ -32,7 +32,7 @@ namespace Ats.Tests.Logic.Booking
         {
             await Tester.TestAsync(_gwt
                 .When(new ApplyBookingDiscountCommand(_bookingId, 3, "Offer1"))
-                .Then(_bookingId,
+                .ThenIdentical(_bookingId,
                     new BookingPriceChangedEvent(_bookingId, 90.00m)
                 )
             );
@@ -43,7 +43,7 @@ namespace Ats.Tests.Logic.Booking
         {
             await Tester.TestAsync(_gwt
                 .When(new ApplyBookingDiscountCommand(_bookingId, 3, "Offer2"))
-                .Then(_bookingId,
+                .ThenIdentical(_bookingId,
                     new BookingPriceChangedEvent(_bookingId, 20.00m)
                 )
             );

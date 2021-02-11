@@ -34,7 +34,7 @@ namespace Ats.Tests.Logic.Flight
         {
             await Tester.TestAsync(_gwt
                 .When(new ScheduleFlightCommand(_flightUid, _flightId, _departureAirport.Code, _arrivalAirport.Code, _daysOfWeek, _departureHour))
-                .Then(_flightUid, new FlightScheduledEvent(_flightUid, _flightId, _departureAirport.Code, _arrivalAirport.Code, _daysOfWeek, _departureHour))
+                .ThenIdentical(_flightUid, new FlightScheduledEvent(_flightUid, _flightId, _departureAirport.Code, _arrivalAirport.Code, _daysOfWeek, _departureHour))
             );
         }
 

@@ -15,7 +15,7 @@ namespace Ats.Tests.TestTools
     {
         public IDictionary<string, IEnumerable<IEvent>> InitializationEvents { get; private set; } = new Dictionary<string, IEnumerable<IEvent>>();
         public IList<ICommand> CommandsToExecute { get; private set; } = new List<ICommand>();
-        public IDictionary<string, IEnumerable<IEvent>> ExpectedEvents { get; private set; } = new Dictionary<string, IEnumerable<IEvent>>();
+        public IDictionary<string, IEventsExpectation> ExpectedEvents { get; private set; } = new Dictionary<string, IEventsExpectation>();
         public ExceptionExpectation ExpectedException { get; private set; }
 
         public GivenWhenThen Given(Guid eventStreamId, IEnumerable<IEvent> initializationEvents)
@@ -45,15 +45,33 @@ namespace Ats.Tests.TestTools
             return this;
         }
 
-        public GivenWhenThen Then(Guid eventStreamId, IEnumerable<IEvent> expectedEvents)
+        public GivenWhenThen ThenIdentical(Guid eventStreamId, IEnumerable<IEvent> expectedEvents)
         {
-            Then(eventStreamId, expectedEvents.ToArray());
+            ThenIdentical(eventStreamId, expectedEvents.ToArray());
             return this;
         }
 
-        public GivenWhenThen Then(Guid eventStreamId, params IEvent[] expectedEvents)
+        public GivenWhenThen ThenIdentical(Guid eventStreamId, params IEvent[] expectedEvents)
         {
-            ExpectedEvents.Add(eventStreamId.ToString(), expectedEvents);
+            ExpectedEvents.Add(eventStreamId.ToString(), new PositiveEventsExpectation(expectedEvents, PositiveEventsExpectationType.Identical));
+            return this;
+        }
+
+        public GivenWhenThen ThenContains(Guid eventStreamId, IEnumerable<IEvent> expectedEvents)
+        {
+            ThenContains(eventStreamId, expectedEvents.ToArray());
+            return this;
+        }
+
+        public GivenWhenThen ThenContains(Guid eventStreamId, params IEvent[] expectedEvents)
+        {
+            ExpectedEvents.Add(eventStreamId.ToString(), new PositiveEventsExpectation(expectedEvents, PositiveEventsExpectationType.Contains));
+            return this;
+        }
+
+        public GivenWhenThen ThenDoesntContain(Guid eventStreamId, params Func<IEvent, bool>[] unexpectedEventQualifiers)
+        {
+            ExpectedEvents.Add(eventStreamId.ToString(), new NegativeEventsExpectation(unexpectedEventQualifiers));
             return this;
         }
 

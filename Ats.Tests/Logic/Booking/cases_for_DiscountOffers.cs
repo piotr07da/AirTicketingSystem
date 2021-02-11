@@ -1,5 +1,4 @@
 ﻿using Ats.Application.Booking;
-using Ats.Core.Domain;
 using Ats.Domain.Airports;
 using Ats.Domain.Booking;
 using Ats.Domain.Customer;
@@ -29,7 +28,7 @@ namespace Ats.Tests.Logic.Booking
                     new BookingStartedEvent(_bookingId, flightInstanceId, 100.00m),
                     new BookingCustomerAssignedEvent(_bookingId, customerId))
                 .When(new RefreshDiscountOffersCommand(_bookingId, 2))
-                .Then(_bookingId, new BookingDiscountOfferAddedEvent(_bookingId, "BirthdayDiscount", 5.00m)) // Powinno być ThenContains - patrz TODO w klasie GivenWhenThen
+                .ThenContains(_bookingId, new BookingDiscountOfferAddedEvent(_bookingId, "BirthdayDiscount", 5.00m))
             );
         }
 
@@ -45,7 +44,7 @@ namespace Ats.Tests.Logic.Booking
                 .Given(flightInstanceId, new FlightInstanceCreatedEvent(flightInstanceId, flightUid, 100.00m, new DateTime(2021, 2, 11)))
                 .Given(_bookingId, new BookingStartedEvent(_bookingId, flightInstanceId, 100.00m))
                 .When(new RefreshDiscountOffersCommand(_bookingId, 1))
-                .Then(_bookingId, new BookingDiscountOfferAddedEvent(_bookingId, "AfricaThursdayDiscount", 5.00m)) // Powinno być ThenContains - patrz TODO w klasie GivenWhenThen
+                .ThenContains(_bookingId, new BookingDiscountOfferAddedEvent(_bookingId, "AfricaThursdayDiscount", 5.00m))
             );
         }
 
@@ -61,7 +60,7 @@ namespace Ats.Tests.Logic.Booking
                 .Given(flightInstanceId, new FlightInstanceCreatedEvent(flightInstanceId, flightUid, 100.00m, new DateTime(2021, 2, 11)))
                 .Given(_bookingId, new BookingStartedEvent(_bookingId, flightInstanceId, 100.00m))
                 .When(new RefreshDiscountOffersCommand(_bookingId, 1))
-                .Then(_bookingId, new IEvent[0]) // Powinno być ThenNot (wraz z podanymi eventem BookingDiscountOfferAddedEvent, który nie powinien wystąpić, to nie znaczy, że nie mogą wystąpić inne discounty) - patrz TODO w klasie GivenWhenThen
+                .ThenDoesntContain(_bookingId, e => e is BookingDiscountOfferAddedEvent bdoae && bdoae.OfferName == "AfricaThursdayDiscount")
             );
         }
 
@@ -79,7 +78,7 @@ namespace Ats.Tests.Logic.Booking
                     new BookingCustomerAssignedEvent(_bookingId, customerId),
                     new BookingDiscountOfferAddedEvent(_bookingId, "BirthdayDiscount", 5.00m))
                 .When(new RefreshDiscountOffersCommand(_bookingId, 3))
-                .Then(_bookingId, new IEvent[0]) // Powinno być ThenNot (wraz z podanymi eventem BookingDiscountOfferAddedEvent, który nie powinien wystąpić, to nie znaczy, że nie mogą wystąpić inne discounty) - patrz TODO w klasie GivenWhenThen
+                .ThenDoesntContain(_bookingId, e => e is BookingDiscountOfferAddedEvent bdoae && bdoae.OfferName == "BirthdayDiscount")
             );
         }
 
@@ -97,7 +96,7 @@ namespace Ats.Tests.Logic.Booking
                     new BookingCustomerAssignedEvent(_bookingId, customerId),
                     new BookingDiscountOfferAddedEvent(_bookingId, "BirthdayDiscount", 5.00m))
                 .When(new RefreshDiscountOffersCommand(_bookingId, 3))
-                .Then(_bookingId, new BookingDiscountOfferRemovedEvent(_bookingId, "BirthdayDiscount"))
+                .ThenContains(_bookingId, new BookingDiscountOfferRemovedEvent(_bookingId, "BirthdayDiscount"))
             );
         }
     }
